@@ -51,3 +51,13 @@ ggplot(data, aes(x = B28006_001E)) +
   theme_minimal()
 
 ```
+
+
+```{r}
+ggplot(data, aes(x = B28006_019E)) +
+  geom_histogram(bins = 50, fill = 'red', color = 'black') +
+  labs(title = 'Internet access distribution',
+      x = 'internet access',
+      y = 'frequency') +
+      facet_wrap(~NAME)
+```
