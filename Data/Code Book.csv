@@ -1,0 +1,24 @@
+﻿GEO_ID,Geography,ID,Yel+Red=Orange,Totals Check,% Comp w Int Acc,% No Comp or Int Acc,P(Comp|Edu),P(Edu|Comp)
+NAME,Geographic Area Name,State,Alabama,,,,,
+B28006_001E,Estimate!!Total:,State Total,3399215,,,,,
+B28006_002E,Estimate!!Total:!!Less than high school graduate or equivalency:,< HS Total,367694,367694,7.95%,2.87%,73.47%,12.22%
+B28006_003E,Estimate!!Total:!!Less than high school graduate or equivalency:!!Has a computer:,< HS w/Comp,320484,320484,,,,
+B28006_004E,Estimate!!Total:!!Less than high school graduate or equivalency:!!Has a computer:!!With dial-up Internet subscription alone,< HS w/Comp w/Dial,384,270148,,,,
+B28006_005E,Estimate!!Total:!!Less than high school graduate or equivalency:!!Has a computer:!!With a broadband Internet subscription,< HS w/Comp w/BIS,269764,,,,,
+B28006_006E,Estimate!!Total:!!Less than high school graduate or equivalency:!!Has a computer:!!Without an Internet subscription,< HS w/Comp w/out IS,50336,97546,,,,
+B28006_007E,Estimate!!Total:!!Less than high school graduate or equivalency:!!No computer,< HS no Comp,47210,,,,,
+B28006_008E,"Estimate!!Total:!!High school graduate (includes equivalency) , some college or associate's degree :",HS some Col Total,2034609,2034609,52.51%,7.34%,87.73%,67.61%
+B28006_009E,"Estimate!!Total:!!High school graduate (includes equivalency) , some college or associate's degree :!!Has a computer:",HS some Col w/Comp,1930167,1930167,,,,
+B28006_010E,"Estimate!!Total:!!High school graduate (includes equivalency) , some college or associate's degree :!!Has a computer:!!With dial-up Internet subscription alone",HS some Col w/Comp w/Dial,5164,1785038,,,,
+B28006_011E,"Estimate!!Total:!!High school graduate (includes equivalency) , some college or associate's degree :!!Has a computer:!!With a broadband Internet subscription",HS some Col w/Comp w/BIS,1779874,,,,,
+B28006_012E,"Estimate!!Total:!!High school graduate (includes equivalency) , some college or associate's degree :!!Has a computer:!!Without an Internet subscription", HS some Col w/Comp w/out IS,145129,249571,,,,
+B28006_013E,"Estimate!!Total:!!High school graduate (includes equivalency) , some college or associate's degree :!!No computer",HS no Comp,104442,,,,,
+B28006_014E,Estimate!!Total:!!Bachelor's degree or higher:,BA+ Total,996912,996912,28.07%,0.01260644,95.70%,33.13%
+B28006_015E,Estimate!!Total:!!Bachelor's degree or higher:!!Has a computer:,BA+ w/Comp,983708,983708,,,,
+B28006_016E,Estimate!!Total:!!Bachelor's degree or higher:!!Has a computer:!!With dial-up Internet subscription alone,BA+  w/Comp w/Dial,1569,954060,,,,
+B28006_017E,Estimate!!Total:!!Bachelor's degree or higher:!!Has a computer:!!With a broadband Internet subscription,BA+ w/Comp w/BIS,952491,,,,,
+B28006_018E,Estimate!!Total:!!Bachelor's degree or higher:!!Has a computer:!!Without an Internet subscription,BA+  w/Comp w/out IS,29648,42852,,,,
+B28006_019E,Estimate!!Total:!!Bachelor's degree or higher:!!No computer,BA+  no Comp,13204,,,,,
+,,,,,,,,
+,,,,,88.53%,11.47%,,
+,,,,,100.00%,,,
