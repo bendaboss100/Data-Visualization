@@ -49,6 +49,8 @@ colnames(data) <- new_col_names
 # Categorical Plot
 
 ```{r}
+
+# Categorial states in regions 
 data <- data %>%
   mutate(
     Region = case_when(
@@ -65,32 +67,46 @@ data <- data %>%
     )
   )
 
+
+# New column for proportion of people with no computer
+data <- data %>%
+  mutate(
+    Prop_no_Comp = (data$`HS no Comp`+data$`< HS no Comp`+data$`BA+  no Comp`)/data$`State Total`
+  )
+
+
 ```
 
 ## Bar Graph
 
 ```{r}
-library(ggplot2)
-library(dplyr)
-library(tidyr)
+ggplot(data, aes(Region)) +
+  geom_bar(fill ="skyblue") +
+  labs(title = "Bureau of Economic Analysis Regions",
+       y = "Number of States") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_y_continuous(breaks = seq(0, 15, by = 1))
 
-ggplot(data, aes(x = Region)) +
-  geom_bar() +
-  labs(title = "Bar graph of Region",
-       x = "Region",
-       y = "Count") +
+
+```
+```{r}
+summary_data <- data %>%
+  group_by(Region) %>%
+  summarise(
+    mean_no_Comp = mean(Prop_no_Comp),
+    median_no_Comp = median(Prop_no_Comp)
+  )
+
+# Create the bar plot
+ggplot(summary_data, aes(x = Region, y = mean_no_Comp)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(x = "", y = "Proportion with No Computers") +
+  ggtitle("Bureau of Economic Analysis Regions") + 
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
-```{r}
-rows_with_na <- which(rowSums(is.na(data)) > 0)
-
-# Display rows with NA values
-print(data[rows_with_na, ])
-```
-
-
 ## Sample Histogram
 
 ```{r}
