@@ -77,7 +77,7 @@ data <- data %>%
 
 ```
 
-## Bar Graph
+## Bar Graph Hello
 
 ```{r}
 ggplot(data, aes(Region)) +
