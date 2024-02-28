@@ -50,7 +50,7 @@ new_col_names <- Code_book[[3]] # Extract the third column
 colnames(data) <- new_col_names
 ```
 
-## Categorical Plot
+## Categorical Plot Hello
 
 ```{r}
 # Categorial states in regions 
