@@ -1,4 +1,5 @@
-﻿GEO_ID,Geography,ID,Yel+Red=Orange,Totals Check,% Comp w Int Acc,% No Comp or Int Acc,P(Comp|Edu),P(Edu|Comp)
+﻿False Header,False Header,False Header,False Header,False Header,False Header,False Header,False Header,False Header
+GEO_ID,Geography,ID,Yel+Red=Orange,Totals Check,% Comp w Int Acc,% No Comp or Int Acc,P(Comp|Edu),P(Edu|Comp)
 NAME,Geographic Area Name,State,Alabama,,,,,
 B28006_001E,Estimate!!Total:,State Total,3399215,,,,,
 B28006_002E,Estimate!!Total:!!Less than high school graduate or equivalency:,< HS Total,367694,367694,7.95%,2.87%,73.47%,12.22%

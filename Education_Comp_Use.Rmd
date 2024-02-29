@@ -33,23 +33,26 @@ Code_book <- read_csv("Data/Code Book.csv")
 # Read the data set 
 data <- read.csv("Data/Edu_Comp_22.csv", header = FALSE, skip = 2) # Skip first two rows
 col_names <- read.csv("Data/Edu_Comp_22.csv", header = FALSE, nrows = 1) # Read only the first row as column names
-colnames(data) <- col_names # Assign column names to the data
+colnames(data) <- col_names # Assigns row 1 header to data
+```
 
+```{r}
 # Remove columns with margin of error
 cols_to_remove <- grep("M$", col_names) 
-data <- data[, -cols_to_remove, drop = FALSE] # Remove identified columns
+data <- data[, -cols_to_remove, drop = FALSE]
 
 # Remove last NA column
 data <- data[, -ncol(data), drop = FALSE]
 
-# Replace headers with new_col_names
+new_col_names <- Code_book[[3]] # Extract the third column
+
+# Replace the headers with new_col_names
 colnames(data) <- new_col_names
 ```
 
-# Categorical Plot
+## Categorical Plot Hello
 
 ```{r}
-
 # Categorial states in regions 
 data <- data %>%
   mutate(
@@ -71,7 +74,7 @@ data <- data %>%
 # New column for proportion of people with no internet access or no computer
 data <- data %>%
   mutate(
-    Prop_no_Comp = (data$`HS no Comp`+data$`< HS no Comp`+data$`BA+  no Comp`)/data$`State Total`
+    Prop_no_Comp = (data$`HS no Comp`+ data$`< HS no Comp`+ data$`BA+  no Comp`)/data$`State Total`
   )
 
 
@@ -125,10 +128,11 @@ ggplot(data, aes(x = `State Total`)) +
 
 
 ```{r}
-ggplot(data, aes(x = B28006_019E)) +
+ggplot(data, aes(x = Prop_no_Comp)) +
   geom_histogram(bins = 50, fill = 'red', color = 'black') +
-  labs(title = 'Internet access distribution',
-      x = 'internet access',
-      y = 'frequency') +
-      facet_wrap(~NAME)
+  labs(title = 'No Computer or Internet Access Distribution',
+       x = 'Proportion',
+       y = 'Number of States') +
+  facet_wrap(~ Region)
+
 ```
