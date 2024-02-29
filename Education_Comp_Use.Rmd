@@ -71,7 +71,7 @@ data <- data %>%
   )
 
 
-# New column for proportion of people with no computer
+# New column for proportion of people with no internet access or no computer
 data <- data %>%
   mutate(
     Prop_no_Comp = (data$`HS no Comp`+ data$`< HS no Comp`+ data$`BA+  no Comp`)/data$`State Total`
