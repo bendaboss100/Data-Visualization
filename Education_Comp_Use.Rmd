@@ -9,14 +9,16 @@ format:
     code-copy: true
     code-tools: true
 ---
-
 ```{r}
-install.packages("reader")
+# install.packages("reader")
+# install.packages("reshape2")
+
 ```
 
 ```{r setup, include=FALSE}
 library(readr)
 library(tidyverse)
+library(dplyr)
 knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 ```
 
@@ -43,14 +45,16 @@ data <- data[, -cols_to_remove, drop = FALSE]
 
 # Remove last NA column
 data <- data[, -ncol(data), drop = FALSE]
+```
 
+```{r}
+# Rename headers to more user friendly and understandable
 new_col_names <- Code_book[[3]] # Extract the third column
-
 # Replace the headers with new_col_names
 colnames(data) <- new_col_names
 ```
 
-## Categorical Plot Hello
+## Categorical Plot 
 
 ```{r}
 # Categorial states in regions 
@@ -69,17 +73,24 @@ data <- data %>%
       TRUE ~ NA_character_
     )
   )
-
-
-# New column for proportion of people with no internet access or no computer
-data <- data %>%
-  mutate(
-    Prop_no_Comp = (data$`HS no Comp`+ data$`< HS no Comp`+ data$`BA+  no Comp`)/data$`State Total`
-  )
-
-
 ```
 
+```{r}
+# New column for proportion of people with no computer or internet access
+data <- data %>%
+  mutate(
+    Prop_no_Comp = (`< HS no Comp`+ `< HS w/Comp w/out IS`+ `HS no Comp`+ `HS some Col w/Comp w/out IS`+ `BA+  no Comp` + `BA+  w/Comp w/out IS`)/`State Total`
+  )
+```
+
+```{r}
+# New columns for proportion of people with no internet access or no computer by education level, that is a conditional probability, P(no_Comp|education level)
+data <- data %>%
+  mutate(
+    lths_Prop_no_Comp = ((`< HS no Comp`+ `< HS w/Comp w/out IS`)/`< HS Total`), 
+    hs_Prop_no_Comp = ((`HS no Comp`+ `HS some Col w/Comp w/out IS`)/`HS some Col Total`),
+    ba_Prop_no_Comp = ((`BA+  no Comp` + `BA+  w/Comp w/out IS`)/`BA+ Total`))
+```
 ## Bar Graph
 
 ```{r}
@@ -104,8 +115,8 @@ summary_data <- data %>%
 # Create the bar plot
 ggplot(summary_data, aes(x = Region, y = mean_no_Comp)) +
   geom_bar(stat = "identity", fill = "skyblue") +
-  labs(x = "", y = "Proportion with No Computers") +
-  ggtitle("Bureau of Economic Analysis Regions") + 
+  labs(x = "Bureau of Economic Analysis Regions", y = "Proportion") +
+  ggtitle("USA: No Computer or Internet Access") + 
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
@@ -130,9 +141,54 @@ ggplot(data, aes(x = `State Total`)) +
 ```{r}
 ggplot(data, aes(x = Prop_no_Comp)) +
   geom_histogram(bins = 50, fill = 'red', color = 'black') +
-  labs(title = 'No Computer or Internet Access Distribution',
+  labs(title = 'No Computer or Internet Access Distribution by Region',
        x = 'Proportion',
        y = 'Number of States') +
   facet_wrap(~ Region)
 
 ```
+
+
+```{r}
+ggplot(data, aes(y = Prop_no_Comp)) +
+  geom_boxplot(fill='skyblue') +
+  labs(title = 'USA:No Computer or Internet Access',
+       y = 'Proportion') +
+  theme_minimal() +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+```
+```{r}
+# Boxplot No Computer or Internet Access by Education level
+edu_level_data <- data %>%
+  select(Prop_no_Comp, lths_Prop_no_Comp, hs_Prop_no_Comp, ba_Prop_no_Comp
+  )
+# Rename columns to more understandable
+colnames(edu_level_data) <- c("USA", "Less Than High School", "HS and Some College", "Bachelors Plus")
+
+summary(edu_level_data)
+```
+```{r}
+# Long format for plotting
+edu_level_data_long <- tidyr::gather(edu_level_data, key = "Variable", value = "Proportion") #convert wide to long
+
+# Reorder the levels of education for x axis
+edu_level_data_long$Variable <- factor(edu_level_data_long$Variable, 
+                                       levels = c("Less Than High School", "HS and Some College", "Bachelors Plus", "USA"))
+
+# Create boxplot
+ggplot(edu_level_data_long, aes(x = Variable, y = Proportion, fill = Variable)) +
+  geom_boxplot(position = position_dodge(width = 0.75), width = 0.5, alpha = 0.5) +
+  labs(title = 'USA: No Computer or Internet Access by Education Level',
+       x = '',
+       y = 'Proportion',
+       fill = 'Education Level') +
+  scale_fill_manual(values = c("skyblue", "navy", "white", "red")) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  guides(fill = FALSE) # Remove legend
+
+```
+
+
+
