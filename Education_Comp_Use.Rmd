@@ -37,14 +37,15 @@ colnames(data) <- col_names # Assigns row 1 header to data
 # Remove columns with margin of error
 cols_to_remove <- grep("M$", col_names) 
 data <- data[, -cols_to_remove, drop = FALSE]
-
+Code_Book <- read_csv("Data/Code Book.csv")
+new_col_names <- Code_Book[[3]]
 # Remove last NA column
 data <- data[, -ncol(data), drop = FALSE]
 ```
 
 ```{r}
 # Replace the headers with new_col_names
-colnames(data) <- new_col_names
+ colnames(data) <- new_col_names
 ```
 
 
