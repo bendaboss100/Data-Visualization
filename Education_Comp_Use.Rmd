@@ -9,11 +9,6 @@ format:
     code-copy: true
     code-tools: true
 ---
-```{r}
-# install.packages("reader")
-# install.packages("reshape2")
-
-```
 
 ```{r setup, include=FALSE}
 library(readr)
@@ -47,9 +42,11 @@ data <- data[, -cols_to_remove, drop = FALSE]
 data <- data[, -ncol(data), drop = FALSE]
 ```
 
+```{r}
 # Replace the headers with new_col_names
 colnames(data) <- new_col_names
 ```
+
 
 ## Categorical Plot 
 
