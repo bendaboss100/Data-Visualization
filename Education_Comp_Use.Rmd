@@ -152,8 +152,9 @@ ggplot(data, aes(x = Prop_no_Comp)) +
 ```{r}
 ggplot(data, aes(y = Prop_no_Comp)) +
   geom_boxplot(fill='skyblue') +
-  labs(title = 'USA:No Computer or Internet Access',
+  labs(title = 'USA:No Computer or Internet Subscription',
        y = 'Proportion') +
+  geom_text(aes(label = paste("Mean:", round(mean(Prop_no_Comp), 4)), x = 1.5, y = mean(Prop_no_Comp)), color = "red", size = 4, vjust = -0.5, hjust = 2.5) +
   theme_minimal() +
   theme(axis.text.x = element_blank(),
         axis.ticks.x = element_blank())
@@ -179,7 +180,7 @@ edu_level_data_long$Variable <- factor(edu_level_data_long$Variable,
 # Create boxplot
 ggplot(edu_level_data_long, aes(x = Variable, y = Proportion, fill = Variable)) +
   geom_boxplot(position = position_dodge(width = 0.75), width = 0.5, alpha = 0.5) +
-  labs(title = 'USA: No Computer or Internet Access by Education Level',
+  labs(title = 'USA: No Computer or Internet Subscription by Education Level',
        x = '',
        y = 'Proportion',
        fill = 'Education Level') +
