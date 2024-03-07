@@ -9,6 +9,7 @@ format:
     code-copy: true
     code-tools: true
 ---
+
 ```{r}
 # install.packages("reader")
 # install.packages("reshape2")
@@ -22,7 +23,7 @@ library(dplyr)
 knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 ```
 
-## Import Data Hello
+## Import Data 
 
 ```{r setup, include=FALSE}
 Edu_Comp_22 <- read_csv("Data/Edu_Comp_22.csv")
@@ -54,7 +55,7 @@ new_col_names <- Code_book[[3]] # Extract the third column
 colnames(data) <- new_col_names
 ```
 
-## Categorical Plot 
+## Categorical Plot
 
 ```{r}
 # Categorial states in regions 
@@ -91,6 +92,7 @@ data <- data %>%
     hs_Prop_no_Comp = ((`HS no Comp`+ `HS some Col w/Comp w/out IS`)/`HS some Col Total`),
     ba_Prop_no_Comp = ((`BA+  no Comp` + `BA+  w/Comp w/out IS`)/`BA+ Total`))
 ```
+
 ## Bar Graph
 
 ```{r}
@@ -104,6 +106,7 @@ ggplot(data, aes(Region)) +
 
 
 ```
+
 ```{r}
 summary_data <- data %>%
   group_by(Region) %>%
@@ -121,6 +124,7 @@ ggplot(summary_data, aes(x = Region, y = mean_no_Comp)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
+
 ## Sample Histogram
 
 ```{r}
@@ -137,7 +141,6 @@ ggplot(data, aes(x = `State Total`)) +
 
 ```
 
-
 ```{r}
 ggplot(data, aes(x = Prop_no_Comp)) +
   geom_histogram(bins = 50, fill = 'red', color = 'black') +
@@ -147,7 +150,6 @@ ggplot(data, aes(x = Prop_no_Comp)) +
   facet_wrap(~ Region)
 
 ```
-
 
 ```{r}
 ggplot(data, aes(y = Prop_no_Comp)) +
@@ -159,6 +161,7 @@ ggplot(data, aes(y = Prop_no_Comp)) +
   theme(axis.text.x = element_blank(),
         axis.ticks.x = element_blank())
 ```
+
 ```{r}
 # Boxplot No Computer or Internet Access by Education level
 edu_level_data <- data %>%
@@ -169,6 +172,7 @@ colnames(edu_level_data) <- c("USA", "Less Than High School", "HS and Some Colle
 
 summary(edu_level_data)
 ```
+
 ```{r}
 # Long format for plotting
 edu_level_data_long <- tidyr::gather(edu_level_data, key = "Variable", value = "Proportion") #convert wide to long
@@ -190,6 +194,3 @@ ggplot(edu_level_data_long, aes(x = Variable, y = Proportion, fill = Variable)) 
   guides(fill = FALSE) # Remove legend
 
 ```
-
-
-
