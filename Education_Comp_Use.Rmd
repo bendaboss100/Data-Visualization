@@ -10,12 +10,6 @@ format:
     code-tools: true
 ---
 
-```{r}
-# install.packages("reader")
-# install.packages("reshape2")
-
-```
-
 ```{r setup, include=FALSE}
 library(readr)
 library(tidyverse)
@@ -23,7 +17,6 @@ library(dplyr)
 knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 ```
 
-## Import Data 
 
 ```{r setup, include=FALSE}
 Edu_Comp_22 <- read_csv("Data/Edu_Comp_22.csv")
@@ -43,19 +36,18 @@ colnames(data) <- col_names # Assigns row 1 header to data
 # Remove columns with margin of error
 cols_to_remove <- grep("M$", col_names) 
 data <- data[, -cols_to_remove, drop = FALSE]
-
+Code_Book <- read_csv("Data/Code Book.csv")
+new_col_names <- Code_Book[[3]]
 # Remove last NA column
 data <- data[, -ncol(data), drop = FALSE]
 ```
 
 ```{r}
-# Rename headers to more user friendly and understandable
-new_col_names <- Code_book[[3]] # Extract the third column
+
 # Replace the headers with new_col_names
-colnames(data) <- new_col_names
+ colnames(data) <- new_col_names
 ```
 
-## Categorical Plot
 
 ```{r}
 # Categorial states in regions 
@@ -93,6 +85,14 @@ data <- data %>%
     ba_Prop_no_Comp = ((`BA+  no Comp` + `BA+  w/Comp w/out IS`)/`BA+ Total`))
 ```
 
+```{r}
+# New columns for proportion of people with no internet access or no computer by education level, that is a conditional probability, P(no_Comp|education level)
+data <- data %>%
+  mutate(
+    lths_Prop_no_Comp = ((`< HS no Comp`+ `< HS w/Comp w/out IS`)/`< HS Total`), 
+    hs_Prop_no_Comp = ((`HS no Comp`+ `HS some Col w/Comp w/out IS`)/`HS some Col Total`),
+    ba_Prop_no_Comp = ((`BA+  no Comp` + `BA+  w/Comp w/out IS`)/`BA+ Total`))
+```
 ## Bar Graph
 
 ```{r}
@@ -156,10 +156,8 @@ ggplot(data, aes(y = Prop_no_Comp)) +
   geom_boxplot(fill='skyblue') +
   labs(title = 'USA:No Computer or Internet Subscription',
        y = 'Proportion') +
-  geom_text(aes(label = paste("Mean:", round(mean(Prop_no_Comp), 4)), x = 1.5, y = mean(Prop_no_Comp)), color = "red", size = 4, vjust = -0.5, hjust = 2.5) +
-  theme_minimal() +
-  theme(axis.text.x = element_blank(),
-        axis.ticks.x = element_blank())
+  geom_text(aes(label = paste("Mean:", round(mean(Prop_no_Comp), 4)), x = 1.5, y = mean(Prop_no_Comp)), color = "red", size = 4, vjust = -0.5, hjust = 2.5)
+  
 ```
 
 ```{r}
@@ -194,3 +192,4 @@ ggplot(edu_level_data_long, aes(x = Variable, y = Proportion, fill = Variable)) 
   guides(fill = FALSE) # Remove legend
 
 ```
+
