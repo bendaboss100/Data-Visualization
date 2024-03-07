@@ -47,9 +47,6 @@ data <- data[, -cols_to_remove, drop = FALSE]
 data <- data[, -ncol(data), drop = FALSE]
 ```
 
-```{r}
-# Rename headers to more user friendly and understandable
-new_col_names <- Code_book[[3]] # Extract the third column
 # Replace the headers with new_col_names
 colnames(data) <- new_col_names
 ```
