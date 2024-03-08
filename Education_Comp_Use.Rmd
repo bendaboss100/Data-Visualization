@@ -193,3 +193,19 @@ ggplot(edu_level_data_long, aes(x = Variable, y = Proportion, fill = Variable)) 
 
 ```
 
+```{r}
+data <- data %>%
+  mutate(
+    Prop_LHS_No_Comp_Intrnt_statewide = ((`< HS w/Comp w/out IS` + `< HS no Comp` + `< HS w/Comp w/Dial`)/`State Total`),
+    Prop_HS_No_Comp_Intrnt_statewide = ((`HS some Col w/Comp w/out IS` + `HS no Comp` + `HS some Col w/Comp w/Dial`)/`State Total`),
+    Prop_BA_No_Comp_Intrnt_statewide = ((`BA+  w/Comp w/out IS` + `BA+  no Comp` + `BA+  w/Comp w/Dial`)/`State Total`),
+    
+    Prop_LHS_No_Comp_Intrnt = ((`< HS w/Comp w/out IS` + `< HS no Comp` + `< HS w/Comp w/Dial`)/`< HS Total`),
+    Prop_HS_No_Comp_Intrnt = ((`HS some Col w/Comp w/out IS` + `HS no Comp` + `HS some Col w/Comp w/Dial`)/`HS some Col Total`),
+    Prop_BA_No_Comp_Intrnt = ((`BA+  w/Comp w/out IS` + `BA+  no Comp` + `BA+  w/Comp w/Dial`)/`BA+ Total`))
+
+ggplot(data, aes(x = State, y = Prop_LHS_No_Comp_Intrnt)) +
+  geom_bar(stat = "identity", fill = "red", color = "black") +
+  labs(title = "% of people lower than HS w/o Computers or Internet Access in each state in the US", x = "State", y = "% of people w/ < HS educ and w/o IS") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
