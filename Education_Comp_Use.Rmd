@@ -17,7 +17,6 @@ library(dplyr)
 knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 ```
 
-## Import Data Hello
 
 ```{r setup, include=FALSE}
 Edu_Comp_22 <- read_csv("Data/Edu_Comp_22.csv")
@@ -44,12 +43,11 @@ data <- data[, -ncol(data), drop = FALSE]
 ```
 
 ```{r}
+
 # Replace the headers with new_col_names
  colnames(data) <- new_col_names
 ```
 
-
-## Categorical Plot 
 
 ```{r}
 # Categorial states in regions 
@@ -86,6 +84,15 @@ data <- data %>%
     hs_Prop_no_Comp = ((`HS no Comp`+ `HS some Col w/Comp w/out IS`)/`HS some Col Total`),
     ba_Prop_no_Comp = ((`BA+  no Comp` + `BA+  w/Comp w/out IS`)/`BA+ Total`))
 ```
+
+```{r}
+# New columns for proportion of people with no internet access or no computer by education level, that is a conditional probability, P(no_Comp|education level)
+data <- data %>%
+  mutate(
+    lths_Prop_no_Comp = ((`< HS no Comp`+ `< HS w/Comp w/out IS`)/`< HS Total`), 
+    hs_Prop_no_Comp = ((`HS no Comp`+ `HS some Col w/Comp w/out IS`)/`HS some Col Total`),
+    ba_Prop_no_Comp = ((`BA+  no Comp` + `BA+  w/Comp w/out IS`)/`BA+ Total`))
+```
 ## Bar Graph
 
 ```{r}
@@ -99,6 +106,7 @@ ggplot(data, aes(Region)) +
 
 
 ```
+
 ```{r}
 summary_data <- data %>%
   group_by(Region) %>%
@@ -116,6 +124,7 @@ ggplot(summary_data, aes(x = Region, y = mean_no_Comp)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
+
 ## Sample Histogram
 
 ```{r}
@@ -132,7 +141,6 @@ ggplot(data, aes(x = `State Total`)) +
 
 ```
 
-
 ```{r}
 ggplot(data, aes(x = Prop_no_Comp)) +
   geom_histogram(bins = 50, fill = 'red', color = 'black') +
@@ -143,16 +151,15 @@ ggplot(data, aes(x = Prop_no_Comp)) +
 
 ```
 
-
 ```{r}
 ggplot(data, aes(y = Prop_no_Comp)) +
   geom_boxplot(fill='skyblue') +
-  labs(title = 'USA:No Computer or Internet Access',
+  labs(title = 'USA:No Computer or Internet Subscription',
        y = 'Proportion') +
-  theme_minimal() +
-  theme(axis.text.x = element_blank(),
-        axis.ticks.x = element_blank())
+  geom_text(aes(label = paste("Mean:", round(mean(Prop_no_Comp), 4)), x = 1.5, y = mean(Prop_no_Comp)), color = "red", size = 4, vjust = -0.5, hjust = 2.5)
+  
 ```
+
 ```{r}
 # Boxplot No Computer or Internet Access by Education level
 edu_level_data <- data %>%
@@ -163,6 +170,7 @@ colnames(edu_level_data) <- c("USA", "Less Than High School", "HS and Some Colle
 
 summary(edu_level_data)
 ```
+
 ```{r}
 # Long format for plotting
 edu_level_data_long <- tidyr::gather(edu_level_data, key = "Variable", value = "Proportion") #convert wide to long
@@ -174,7 +182,7 @@ edu_level_data_long$Variable <- factor(edu_level_data_long$Variable,
 # Create boxplot
 ggplot(edu_level_data_long, aes(x = Variable, y = Proportion, fill = Variable)) +
   geom_boxplot(position = position_dodge(width = 0.75), width = 0.5, alpha = 0.5) +
-  labs(title = 'USA: No Computer or Internet Access by Education Level',
+  labs(title = 'USA: No Computer or Internet Subscription by Education Level',
        x = '',
        y = 'Proportion',
        fill = 'Education Level') +
@@ -184,6 +192,4 @@ ggplot(edu_level_data_long, aes(x = Variable, y = Proportion, fill = Variable)) 
   guides(fill = FALSE) # Remove legend
 
 ```
-
-
 
