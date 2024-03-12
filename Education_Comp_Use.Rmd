@@ -69,6 +69,14 @@ data <- data %>%
 ```
 
 ```{r}
+library(tidyr)
+
+# Currently it includes people with computers and proper internet access but that can be fixed by just removing that column in a copy of the data table
+data_enum <- pivot_longer(data, cols = contains("Comp", ignore.case = FALSE), names_to = "Tech_Access_Group", values_to = "Count")
+```
+
+
+```{r}
 # New column for proportion of people with no computer or internet access
 data <- data %>%
   mutate(
@@ -124,6 +132,31 @@ ggplot(summary_data, aes(x = Region, y = mean_no_Comp)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
+
+```{r}
+ggplot(data_enum, aes(x = State, y = Count, fill = Tech_Access_Group)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Breakdown of number of people with different tech access levels in each state",
+       x = "State",
+       y = "Count",
+       fill = "Tech Access Group") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r}
+data_enum2 <- data_enum %>%
+  group_by(Region) %>%
+  summarize(mean = mean(Count, na.rm = TRUE))
+
+ggplot(data_enum2, aes(x = Region, y = mean, fill = Tech_Access_Group)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Dodged Barplot",
+       x = "State",
+       y = "Average number of people in each tech access group",
+       fill = "Tech Access Group") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
 
 ## Sample Histogram
 
