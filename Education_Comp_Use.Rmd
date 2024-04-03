@@ -101,7 +101,7 @@ data <- data %>%
     hs_Prop_no_Comp = ((`HS no Comp`+ `HS some Col w/Comp w/out IS`)/`HS some Col Total`),
     ba_Prop_no_Comp = ((`BA+  no Comp` + `BA+  w/Comp w/out IS`)/`BA+ Total`))
 ```
-## Bar Graph
+# Bar Graph
 
 ```{r}
 ggplot(data, aes(Region)) +
@@ -141,6 +141,17 @@ ggplot(data_enum, aes(x = State, y = Count, fill = Tech_Access_Group)) +
        y = "Count",
        fill = "Tech Access Group") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+df <- cbind(data_enum, summary_data)
+ggplot(summary_data, aes(x = region, y = Count, fill = Tech_Access_Group)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Breakdown of number of people with different tech access levels in each state",
+       x = "State",
+       y = "Count",
+       fill = "Tech Access Group") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+head(data_enum)
+head(summary_data)
 ```
 
 ```{r}
@@ -158,7 +169,7 @@ ggplot(data_enum2, aes(x = Region, y = mean, fill = Tech_Access_Group)) +
 ```
 
 
-## Sample Histogram
+# Sample Histogram
 
 ```{r}
 ggplot(data, aes(x = `State Total`)) +
@@ -225,6 +236,7 @@ ggplot(edu_level_data_long, aes(x = Variable, y = Proportion, fill = Variable)) 
   guides(fill = FALSE) # Remove legend
 
 ```
+#statewide vs each state: less than high school + no comp + no internet subscription
 
 ```{r}
 data <- data %>%
@@ -242,3 +254,20 @@ ggplot(data, aes(x = State, y = Prop_LHS_No_Comp_Intrnt)) +
   labs(title = "% of people lower than HS w/o Computers or Internet Access in each state in the US", x = "State", y = "% of people w/ < HS educ and w/o IS") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
+#region: less than high school + no comp + no internet subscription
+
+```{r}
+data <- data %>%
+  mutate(
+    Prop_LHS_No_Comp_Intrnt_statewide = ((`< HS w/Comp w/out IS` + `< HS no Comp` + `< HS w/Comp w/Dial`)/`State Total`),
+    Prop_HS_No_Comp_Intrnt_statewide = ((`HS some Col w/Comp w/out IS` + `HS no Comp` + `HS some Col w/Comp w/Dial`)/`State Total`),
+    Prop_BA_No_Comp_Intrnt_statewide = ((`BA+  w/Comp w/out IS` + `BA+  no Comp` + `BA+  w/Comp w/Dial`)/`State Total`),
+    
+    Prop_LHS_No_Comp_Intrnt = ((`< HS w/Comp w/out IS` + `< HS no Comp` + `< HS w/Comp w/Dial`)/`< HS Total`),
+    Prop_HS_No_Comp_Intrnt = ((`HS some Col w/Comp w/out IS` + `HS no Comp` + `HS some Col w/Comp w/Dial`)/`HS some Col Total`),
+    Prop_BA_No_Comp_Intrnt = ((`BA+  w/Comp w/out IS` + `BA+  no Comp` + `BA+  w/Comp w/Dial`)/`BA+ Total`))
+
+ggplot(summary_data, aes(x = region, y = Prop_LHS_No_Comp_Intrnt)) +
+  geom_bar(stat = "identity", fill = "red", color = "black") +
+  labs(title = "% of people lower than HS w/o Computers or Internet Access in each state in the US", x = "State", y = "% of people w/ < HS educ and w/o IS") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
