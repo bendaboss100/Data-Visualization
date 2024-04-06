@@ -152,5 +152,14 @@ ggplotly(box_Edu_Level)
 ggplotly(c_c)
 ```
 
+### Chart D
+
+```{r}
+Summary_Edu_level <- summary(edu_level_data) %>%
+  kable("html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+Summary_Edu_level
+
+```
 
 
