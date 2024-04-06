@@ -23,6 +23,7 @@ library(plotly)
 
 ```{r}
 # Prepared Data from Education_Comp_Use file
+
 Edu_Comp_22 <- read_csv("Data/Edu_Comp_22.csv", show_col_types = FALSE)
 Code_book <- read_csv("Data/Code Book.csv", show_col_types = FALSE)
 
@@ -40,7 +41,7 @@ colnames(data) <- new_col_names
 
 data <- data[, -ncol(data), drop = FALSE]
 
-data <- data %>%
+data <- data %>% # Putting states in economic regions
   mutate(
     Region = case_when(
       State %in% c("Connecticut", "Maine", "Massachusetts", "New Hampshire", "Rhode Island", "Vermont") ~ "New England",
@@ -56,7 +57,7 @@ data <- data %>%
     )
   )
 
-data <- data %>%
+data <- data %>% 
   mutate(
     Prop_no_Comp = (`< HS no Comp`+ `< HS w/Comp w/out IS`+ `HS no Comp`+ `HS some Col w/Comp w/out IS`+ `BA+  no Comp` + `BA+  w/Comp w/out IS`)/`State Total`
   )
@@ -68,13 +69,6 @@ data <- data %>%
     hs_Prop_no_Comp = ((`HS no Comp`+ `HS some Col w/Comp w/out IS`)/`HS some Col Total`),
     ba_Prop_no_Comp = ((`BA+  no Comp` + `BA+  w/Comp w/out IS`)/`BA+ Total`))
 
-# New columns for proportion of people with no internet access or no computer by education level, that is a conditional probability, P(no_Comp|education level)
-data <- data %>%
-  mutate(
-    lths_Prop_no_Comp = ((`< HS no Comp`+ `< HS w/Comp w/out IS`)/`< HS Total`), 
-    hs_Prop_no_Comp = ((`HS no Comp`+ `HS some Col w/Comp w/out IS`)/`HS some Col Total`),
-    ba_Prop_no_Comp = ((`BA+  no Comp` + `BA+  w/Comp w/out IS`)/`BA+ Total`))
-
 summary_data <- data %>%
   group_by(Region) %>%
   summarise(
@@ -82,17 +76,7 @@ summary_data <- data %>%
     median_no_Comp = median(Prop_no_Comp)
   )
 
-```
-```{r}
-# More prepared data 
-summary_data <- data %>%
-  group_by(Region) %>%
-  summarise(
-    mean_no_Comp = mean(Prop_no_Comp),
-    median_no_Comp = median(Prop_no_Comp)
-  )
-
-# Boxplot No Computer or Internet Access by Education level
+# Prepare data for Boxplot No Computer or Internet Access by Education level
 edu_level_data <- data %>%
   select(Prop_no_Comp, lths_Prop_no_Comp, hs_Prop_no_Comp, ba_Prop_no_Comp
   )
@@ -110,30 +94,16 @@ edu_level_data_long <- tidyr::gather(edu_level_data, key = "Variable", value = "
 edu_level_data_long$Variable <- factor(edu_level_data_long$Variable, 
                                        levels = c("Less Than High School", "HS and Some College", "Bachelors Plus", "USA"))
 
-```
-
-Column {data-width=350}
------------------------------------------------------------------------
-
-### Chart A
-
-```{r}
+# 1 Categorical Plot
 Econ <- ggplot(summary_data, aes(x = Region, y = mean_no_Comp)) +
   geom_bar(stat = "identity", fill = "skyblue") +
   labs(x = "Bureau of Economic Analysis Regions", y = "Proportion") +
   ggtitle("USA: No Computer or Internet Access") + 
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-Econ
-```
 
-Column {data-width=350}
------------------------------------------------------------------------
-
-### Chart B
-
-```{r}
-ggplot(edu_level_data_long, aes(x = Variable, y = Proportion, fill = Variable)) +
+# 2 Numerical Plot
+box_Edu_Level <- ggplot(edu_level_data_long, aes(x = Variable, y = Proportion, fill = Variable)) +
   geom_boxplot(position = position_dodge(width = 0.75), width = 0.5, alpha = 0.5) +
   labs(title = 'USA: No Computer or Internet Subscription by Education Level',
        x = '',
@@ -143,18 +113,44 @@ ggplot(edu_level_data_long, aes(x = Variable, y = Proportion, fill = Variable)) 
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   guides(fill = FALSE) # Remove legend
+
+# 3 For Bivariate Cat-Cat Plot 
+#Education Level and No Computer in Internet Subscription
+
+# Prepare data, pivot long
+data_long_edu_level <- pivot_longer(data, cols = c("lths_Prop_no_Comp", "hs_Prop_no_Comp", "ba_Prop_no_Comp"), names_to = "Education_Level", values_to = "Percent")
+
+# Plot 
+c_c <- ggplot(data_long_edu_level, aes(x = Region, y = Percent, fill = Education_Level)) + 
+  geom_bar(position = "fill", stat = "identity") +
+  labs(title = "No Computer or Internet by Economic Region and Education Level", x = "", y = "Percent")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-### Chart C
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### Chart A
 
 ```{r}
 ggplotly(Econ)
 ```
 
+Column {data-width=350}
+-----------------------------------------------------------------------
 
-### Chart D
+### Chart B
 
 ```{r}
-#Hello
+ggplotly(box_Edu_Level)
 ```
+
+### Chart C
+
+```{r}
+ggplotly(c_c)
+```
+
+
 
