@@ -23,7 +23,7 @@ Edu_Comp_22 <- read_csv("Data/Edu_Comp_22.csv")
 Code_book <- read_csv("Data/Code Book.csv")
 ```
 
-## Prepare Data Hello
+# Prepare Data
 
 ```{r}
 # Read the data set 
@@ -101,7 +101,7 @@ data <- data %>%
     hs_Prop_no_Comp = ((`HS no Comp`+ `HS some Col w/Comp w/out IS`)/`HS some Col Total`),
     ba_Prop_no_Comp = ((`BA+  no Comp` + `BA+  w/Comp w/out IS`)/`BA+ Total`))
 ```
-# Bar Graph
+## Bar Graph
 
 ```{r}
 ggplot(data, aes(Region)) +
@@ -169,7 +169,7 @@ ggplot(data_enum2, aes(x = Region, y = mean, fill = Tech_Access_Group)) +
 ```
 
 
-# Sample Histogram
+## Sample Histogram
 
 ```{r}
 ggplot(data, aes(x = `State Total`)) +
@@ -236,7 +236,7 @@ ggplot(edu_level_data_long, aes(x = Variable, y = Proportion, fill = Variable)) 
   guides(fill = FALSE) # Remove legend
 
 ```
-#statewide vs each state: less than high school + no comp + no internet subscription
+##statewide vs each state: less than high school + no comp + no internet subscription
 
 ```{r}
 data <- data %>%
@@ -254,7 +254,7 @@ ggplot(data, aes(x = State, y = Prop_LHS_No_Comp_Intrnt)) +
   labs(title = "% of people lower than HS w/o Computers or Internet Access in each state in the US", x = "State", y = "% of people w/ < HS educ and w/o IS") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
-#region: less than high school + no comp + no internet subscription
+##region: less than high school + no comp + no internet subscription
 
 ```{r}
 data <- data %>%
@@ -271,3 +271,4 @@ ggplot(summary_data, aes(x = region, y = Prop_LHS_No_Comp_Intrnt)) +
   geom_bar(stat = "identity", fill = "red", color = "black") +
   labs(title = "% of people lower than HS w/o Computers or Internet Access in each state in the US", x = "State", y = "% of people w/ < HS educ and w/o IS") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```

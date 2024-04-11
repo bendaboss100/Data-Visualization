@@ -1,0 +1,236 @@
+---
+title: "690V Data Visualization Practice"
+author: "Group 2"
+date: "`r Sys.Date()`"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+---
+<<<<<<< HEAD
+```{r}
+# install.packages("reader")
+# install.packages("reshape2")
+
+```
+
+```{r setup, include=FALSE}
+library(readr)
+library(tidyverse)
+library(dplyr)
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+```
+
+
+```{r setup, include=FALSE}
+Edu_Comp_22 <- read_csv("Data/Edu_Comp_22.csv")
+Code_book <- read_csv("Data/Code Book.csv")
+```
+
+## Prepare Data
+
+```{r}
+# Read the data set 
+data <- read.csv("Data/Edu_Comp_22.csv", header = FALSE, skip = 2) # Skip first two rows
+col_names <- read.csv("Data/Edu_Comp_22.csv", header = FALSE, nrows = 1) # Read only the first row as column names
+colnames(data) <- col_names # Assigns row 1 header to data
+```
+
+```{r}
+# Remove columns with margin of error
+cols_to_remove <- grep("M$", col_names) 
+data <- data[, -cols_to_remove, drop = FALSE]
+Code_Book <- read_csv("Data/Code Book.csv")
+new_col_names <- Code_Book[[3]]
+# Remove last NA column
+data <- data[, -ncol(data), drop = FALSE]
+```
+
+```{r}
+# Rename headers to more user friendly and understandable
+new_col_names <- Code_book[[3]] # Extract the third column
+# Replace the headers with new_col_names
+colnames(data) <- new_col_names
+```
+
+## Categorical Plot 
+
+```{r}
+
+# Replace the headers with new_col_names
+ colnames(data) <- new_col_names
+```
+
+```{r}
+# Categorial states in regions 
+data <- data %>%
+  mutate(
+    Region = case_when(
+      State %in% c("Connecticut", "Maine", "Massachusetts", "New Hampshire", "Rhode Island", "Vermont") ~ "New England",
+      State %in% c("Delaware", "District of Columbia", "Maryland", "New Jersey", "New York", "Pennsylvania") ~ "Mideast",
+      State %in% c("Illinois", "Indiana", "Michigan", "Ohio", "Wisconsin") ~ "Great Lakes",
+      State %in% c("Iowa", "Kansas", "Minnesota", "Missouri", "Nebraska", "North Dakota", "South Dakota") ~ "Plains",
+      State %in% c("Alabama", "Arkansas", "Florida", "Georgia", "Kentucky", "Louisiana", "Mississippi", "North Carolina", "South Carolina", "Tennessee", "Virginia", "West Virginia") ~ "Southeast",
+      State %in% c("Arizona", "New Mexico", "Oklahoma", "Texas") ~ "Southwest",
+      State %in% c("Colorado", "Idaho", "Montana", "Utah", "Wyoming") ~ "Rocky Mountain",
+      State %in% c("Puerto Rico") ~ "Puerto Rico",
+      State %in% c("Alaska", "California", "Hawaii", "Nevada", "Oregon", "Washington") ~ "Far West",
+      TRUE ~ NA_character_
+    )
+  )
+```
+
+```{r}
+# New column for proportion of people with no computer or internet access
+data <- data %>%
+  mutate(
+    Prop_no_Comp = (`< HS no Comp`+ `< HS w/Comp w/out IS`+ `HS no Comp`+ `HS some Col w/Comp w/out IS`+ `BA+  no Comp` + `BA+  w/Comp w/out IS`)/`State Total`
+  )
+```
+
+```{r}
+# New columns for proportion of people with no internet access or no computer by education level, that is a conditional probability, P(no_Comp|education level)
+data <- data %>%
+  mutate(
+    lths_Prop_no_Comp = ((`< HS no Comp`+ `< HS w/Comp w/out IS`)/`< HS Total`), 
+    hs_Prop_no_Comp = ((`HS no Comp`+ `HS some Col w/Comp w/out IS`)/`HS some Col Total`),
+    ba_Prop_no_Comp = ((`BA+  no Comp` + `BA+  w/Comp w/out IS`)/`BA+ Total`))
+```
+
+```{r}
+# New columns for proportion of people with no internet access or no computer by education level, that is a conditional probability, P(no_Comp|education level)
+data <- data %>%
+  mutate(
+    lths_Prop_no_Comp = ((`< HS no Comp`+ `< HS w/Comp w/out IS`)/`< HS Total`), 
+    hs_Prop_no_Comp = ((`HS no Comp`+ `HS some Col w/Comp w/out IS`)/`HS some Col Total`),
+    ba_Prop_no_Comp = ((`BA+  no Comp` + `BA+  w/Comp w/out IS`)/`BA+ Total`))
+```
+
+## Bar Graph
+
+```{r}
+ggplot(data, aes(Region)) +
+  geom_bar(fill ="skyblue") +
+  labs(title = "Bureau of Economic Analysis Regions",
+       y = "Number of States") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_y_continuous(breaks = seq(0, 15, by = 1))
+```
+
+```{r}
+summary_data <- data %>%
+  group_by(Region) %>%
+  summarise(
+    mean_no_Comp = mean(Prop_no_Comp),
+    median_no_Comp = median(Prop_no_Comp)
+  )
+
+# Create the bar plot
+ggplot(summary_data, aes(x = Region, y = mean_no_Comp)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(x = "Bureau of Economic Analysis Regions", y = "Proportion") +
+  ggtitle("USA: No Computer or Internet Access") + 
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## Sample Histogram
+
+```{r}
+ggplot(data, aes(x = `State Total`)) +
+  geom_histogram(binwidth = 1000000, fill = "skyblue", color = "black") +
+  labs(title = "State Population Distribution",
+       x = "Population in Millions",
+       y = "Number of States") +
+  scale_y_continuous(breaks = seq(0, 14, by = 2),
+                     labels = function(x) format(x, scientific = FALSE)) +
+  scale_x_continuous(breaks = seq(0, max(data$`State Total`), by = 5e6),
+                     labels = function(x) format(x / 1e6, scientific = FALSE, big.mark = ",")) +
+  theme_minimal()
+```
+
+```{r}
+ggplot(data, aes(x = Prop_no_Comp)) +
+  geom_histogram(bins = 50, fill = 'red', color = 'black') +
+  labs(title = 'No Computer or Internet Access Distribution by Region',
+       x = 'Proportion',
+       y = 'Number of States') +
+  facet_wrap(~ Region)
+```
+```{r}
+ggplot(data, aes(y = Prop_no_Comp)) +
+  geom_boxplot(fill='skyblue') +
+  labs(title = 'USA:No Computer or Internet Access',
+       y = 'Proportion') +
+  theme_minimal() +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+```
+
+```{r}
+ggplot(data, aes(y = Prop_no_Comp)) +
+  geom_boxplot(fill='skyblue') +
+  labs(title = 'USA:No Computer or Internet Subscription',
+       y = 'Proportion') +
+  geom_text(aes(label = paste("Mean:", round(mean(Prop_no_Comp), 4)), x = 1.5, y = mean(Prop_no_Comp)), color = "red", size = 4, vjust = -0.5, hjust = 2.5)
+```
+
+```{r}
+# Boxplot No Computer or Internet Access by Education level
+edu_level_data <- data %>%
+  select(Prop_no_Comp, lths_Prop_no_Comp, hs_Prop_no_Comp, ba_Prop_no_Comp
+  )
+# Rename columns to more understandable
+colnames(edu_level_data) <- c("USA", "Less Than High School", "HS and Some College", "Bachelors Plus")
+
+summary(edu_level_data)
+```
+
+```{r}
+# Long format for plotting
+edu_level_data_long <- tidyr::gather(edu_level_data, key = "Variable", value = "Proportion") #convert wide to long
+
+# Reorder the levels of education for x axis
+edu_level_data_long$Variable <- factor(edu_level_data_long$Variable, 
+                                       levels = c("Less Than High School", "HS and Some College", "Bachelors Plus", "USA"))
+
+# Create boxplot
+# Create boxplot
+ggplot(edu_level_data_long, aes(x = Variable, y = Proportion, fill = Variable)) +
+  geom_boxplot(position = position_dodge(width = 0.75), width = 0.5, alpha = 0.5) +
+  labs(title = 'USA: No Computer or Internet Subscription by Education Level',
+       x = '',
+       y = 'Proportion',
+       fill = 'Education Level') +
+  scale_fill_manual(values = c("skyblue", "navy", "white", "red")) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  guides(fill = FALSE) # Remove legend
+
+```
+
+```{r}
+data <- data %>%
+  mutate(
+    Prop_LHS_No_Comp_Intrnt_statewide = ((`< HS w/Comp w/out IS` + `< HS no Comp` + `< HS w/Comp w/Dial`)/`State Total`),
+    Prop_HS_No_Comp_Intrnt_statewide = ((`HS some Col w/Comp w/out IS` + `HS no Comp` + `HS some Col w/Comp w/Dial`)/`State Total`),
+    Prop_BA_No_Comp_Intrnt_statewide = ((`BA+  w/Comp w/out IS` + `BA+  no Comp` + `BA+  w/Comp w/Dial`)/`State Total`),
+    
+    Prop_LHS_No_Comp_Intrnt = ((`< HS w/Comp w/out IS` + `< HS no Comp` + `< HS w/Comp w/Dial`)/`< HS Total`),
+    Prop_HS_No_Comp_Intrnt = ((`HS some Col w/Comp w/out IS` + `HS no Comp` + `HS some Col w/Comp w/Dial`)/`HS some Col Total`),
+    Prop_BA_No_Comp_Intrnt = ((`BA+  w/Comp w/out IS` + `BA+  no Comp` + `BA+  w/Comp w/Dial`)/`BA+ Total`))
+
+ggplot(data, aes(x = State, y = Prop_LHS_No_Comp_Intrnt)) +
+  geom_bar(stat = "identity", fill = "red", color = "black") +
+  labs(title = "% of people lower than HS w/o Computers or Internet Access in each state in the US", x = "State", y = "% of people w/ < HS educ and w/o IS") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+#num-num
+``` {r}
+
+```
+
