@@ -95,7 +95,8 @@ edu_level_data_long$Variable <- factor(edu_level_data_long$Variable,
                                        levels = c("Less Than High School", "HS and Some College", "Bachelors Plus", "USA"))
 
 # 1 Categorical Plot
-Econ <- ggplot(summary_data, aes(x = Region, y = mean_no_Comp)) +
+ascending_data <- summary_data[order(summary_data$mean_no_Comp), ]
+Econ <- ggplot(ascending_data, aes(x = Region, y = mean_no_Comp)) +
   geom_bar(stat = "identity", fill = "skyblue") +
   labs(x = "Bureau of Economic Analysis Regions", y = "Proportion") +
   ggtitle("USA: No Computer or Internet Access") + 
