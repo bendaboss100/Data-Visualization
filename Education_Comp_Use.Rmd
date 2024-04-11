@@ -271,4 +271,55 @@ ggplot(summary_data, aes(x = region, y = Prop_LHS_No_Comp_Intrnt)) +
   geom_bar(stat = "identity", fill = "red", color = "black") +
   labs(title = "% of people lower than HS w/o Computers or Internet Access in each state in the US", x = "State", y = "% of people w/ < HS educ and w/o IS") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
+<<<<<<< HEAD
 ```
+=======
+```
+
+
+
+```{r}
+summary_data <- data %>%
+  group_by(Region) %>%
+  summarise(
+    lths_Prop_no_Comp_no_comp_total = ((`< HS no Comp`)/(`< HS no Comp` + `HS no Comp` +`BA+  no Comp`)), 
+    hs_Prop_no_Comp_no_comp_total = ((`HS no Comp`)/(`< HS no Comp` + `HS no Comp` +`BA+  no Comp`)),
+    BA_Prop_no_Comp_no_comp_total = ((`BA+  no Comp`)/(`< HS no Comp` + `HS no Comp` +`BA+  no Comp`)),
+
+    mean_no_Comp = mean(Prop_no_Comp),
+    median_no_Comp = median(Prop_no_Comp),
+    mean_lths_no_Comp = mean(lths_Prop_no_Comp),
+    median_lths_no_Comp = median(lths_Prop_no_Comp)
+  )
+```
+
+``` {r}
+
+# Create the bar plot
+ggplot(summary_data, aes(x = Region, y = mean(lths_Prop_no_Comp_no_comp_total))) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(x = "Bureau of Economic Analysis Regions", y = "Proportion") +
+  ggtitle("USA: Proportion of people w/o computers who do not have hs degree") + 
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+``` {r}
+ggplot(summary_data, aes(x = Region, y = mean(hs_Prop_no_Comp_no_comp_total))) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(x = "Bureau of Economic Analysis Regions", y = "Proportion") +
+  ggtitle("USA: Proportion of people w/o computers with a hs degree") + 
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+ggplot(summary_data, aes(x = Region, y = mean(BA_Prop_no_Comp_no_comp_total))) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(x = "Bureau of Economic Analysis Regions", y = "Proportion") +
+  ggtitle("USA: Proportion of people w/o computers with a BA+ degree") + 
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+  
