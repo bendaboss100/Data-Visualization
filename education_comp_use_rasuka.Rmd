@@ -27,6 +27,7 @@ knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 ```{r setup, include=FALSE}
 Edu_Comp_22 <- read_csv("Data/Edu_Comp_22.csv")
 Code_book <- read_csv("Data/Code Book.csv")
+head(Edu_Comp_22)
 ```
 
 ## Prepare Data
@@ -36,6 +37,7 @@ Code_book <- read_csv("Data/Code Book.csv")
 data <- read.csv("Data/Edu_Comp_22.csv", header = FALSE, skip = 2) # Skip first two rows
 col_names <- read.csv("Data/Edu_Comp_22.csv", header = FALSE, nrows = 1) # Read only the first row as column names
 colnames(data) <- col_names # Assigns row 1 header to data
+head(data)
 ```
 
 ```{r}
@@ -65,7 +67,7 @@ colnames(data) <- new_col_names
 
 ```{r}
 # Categorial states in regions 
-data <- data %>%
+states <- data %>%
   mutate(
     Region = case_when(
       State %in% c("Connecticut", "Maine", "Massachusetts", "New Hampshire", "Rhode Island", "Vermont") ~ "New England",
@@ -80,32 +82,35 @@ data <- data %>%
       TRUE ~ NA_character_
     )
   )
+head (states)
 ```
 
 ```{r}
 # New column for proportion of people with no computer or internet access
-data <- data %>%
+propnocompnointernet <- data %>%
   mutate(
     Prop_no_Comp = (`< HS no Comp`+ `< HS w/Comp w/out IS`+ `HS no Comp`+ `HS some Col w/Comp w/out IS`+ `BA+  no Comp` + `BA+  w/Comp w/out IS`)/`State Total`
   )
+head(propnocompnointernet)
 ```
 
 ```{r}
 # New columns for proportion of people with no internet access or no computer by education level, that is a conditional probability, P(no_Comp|education level)
-data <- data %>%
+propnocompnointernetedu <- data %>%
   mutate(
     lths_Prop_no_Comp = ((`< HS no Comp`+ `< HS w/Comp w/out IS`)/`< HS Total`), 
     hs_Prop_no_Comp = ((`HS no Comp`+ `HS some Col w/Comp w/out IS`)/`HS some Col Total`),
     ba_Prop_no_Comp = ((`BA+  no Comp` + `BA+  w/Comp w/out IS`)/`BA+ Total`))
+head(propnocompnointernetedu)
 ```
 
 ```{r}
 # New columns for proportion of people with no internet access or no computer by education level, that is a conditional probability, P(no_Comp|education level)
-data <- data %>%
-  mutate(
-    lths_Prop_no_Comp = ((`< HS no Comp`+ `< HS w/Comp w/out IS`)/`< HS Total`), 
-    hs_Prop_no_Comp = ((`HS no Comp`+ `HS some Col w/Comp w/out IS`)/`HS some Col Total`),
-    ba_Prop_no_Comp = ((`BA+  no Comp` + `BA+  w/Comp w/out IS`)/`BA+ Total`))
+#data <- data %>%
+  #mutate(
+   # lths_Prop_no_Comp = ((`< HS no Comp`+ `< HS w/Comp w/out IS`)/`< HS Total`), 
+    #hs_Prop_no_Comp = ((`HS no Comp`+ `HS some Col w/Comp w/out IS`)/`HS some Col Total`),
+    #ba_Prop_no_Comp = ((`BA+  no Comp` + `BA+  w/Comp w/out IS`)/`BA+ Total`))
 ```
 
 ## Bar Graph
@@ -229,8 +234,50 @@ ggplot(data, aes(x = State, y = Prop_LHS_No_Comp_Intrnt)) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
-#num-num
+# no comp or internet access by region
 ``` {r}
+# Grouped bar plot
+nocomp_region <- ggplot(data, aes(x = Region, y = Prop_no_Comp, fill = Region)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Proportion of No Computer or Internet Access by Region",
+       x = "Region",
+       y = "Proportion") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_manual(values = c("hotpink", "skyblue", "salmon", "lightgreen", "pink", "yellow", "red", "lightpink", "purple"))
+
+nocomp_region
+```
+
+
+#Code from Github- dashboard
+```{r}
+# 3 For Bivariate Cat-Cat Plot 
+#Education Level and No Computer in Internet Subscription
+
+# Prepare data, pivot long
+data_long_edu_level <- pivot_longer(data, cols = c("lths_Prop_no_Comp", "hs_Prop_no_Comp", "ba_Prop_no_Comp"), names_to = "Education_Level", values_to = "Percent")
+
+# Plot 
+c_c <- ggplot(data_long_edu_level, aes(x = Region, y = Percent, fill = Education_Level)) + 
+  geom_bar(position = "fill", stat = "identity") +
+  labs(title = "No Computer or Internet by Economic Region and Education Level", x = "", y = "Percent")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+c_c
+
+#clustered
+# Prepare data, pivot long
+data_long_edu_level <- pivot_longer(data, cols = c("lths_Prop_no_Comp", "hs_Prop_no_Comp", "ba_Prop_no_Comp"), names_to = "Education_Level", values_to = "Percent")
+
+# Plot 
+clustered_c_c <- ggplot(data_long_edu_level, aes(x = Region, y = Percent, fill = Education_Level)) + 
+  geom_bar(position = "dodge", stat = "identity") +
+  labs(title = "No Computer or Internet by Economic Region and Education Level", x = "", y = "Percent") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+clustered_c_c
+
 
 ```
 
