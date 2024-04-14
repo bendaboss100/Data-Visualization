@@ -143,15 +143,20 @@ c_c <- ggplot(data_long_edu_level, aes(x = Region, y = Percent, fill = Education
 ggplotly(Econ)
 ```
 
+<<<<<<< HEAD
 Column {data-width=550}
 -----------------------------------------------------------------------
+=======
+
+>>>>>>> 665036530569ad6f682629bcc5813990a195a5a5
 
 ### Chart B
 
 ```{r}
 ggplotly(box_Edu_Level)
 ```
-
+Column {data-width=350}
+-----------------------------------------------------------------------
 ### Chart C
 
 ```{r}
