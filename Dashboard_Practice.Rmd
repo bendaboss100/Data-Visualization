@@ -95,8 +95,9 @@ edu_level_data_long$Variable <- factor(edu_level_data_long$Variable,
                                        levels = c("Less Than High School", "HS and Some College", "Bachelors Plus", "USA"))
 
 # 1 Categorical Plot
-ascending_data <- summary_data[order(summary_data$mean_no_Comp), ]
-Econ <- ggplot(ascending_data, aes(x = Region, y = mean_no_Comp)) +
+#ascending order
+summary_data <- summary_data %>% arrange(mean_no_Comp)
+Econ <- ggplot(summary_data, aes(x = reorder(Region, mean_no_Comp), y = mean_no_Comp)) +
   geom_bar(stat = "identity", fill = "skyblue") +
   labs(x = "Bureau of Economic Analysis Regions", y = "Proportion") +
   ggtitle("USA: No Computer or Internet Access") + 
@@ -120,6 +121,10 @@ box_Edu_Level <- ggplot(edu_level_data_long, aes(x = Variable, y = Proportion, f
 
 # Prepare data, pivot long
 data_long_edu_level <- pivot_longer(data, cols = c("lths_Prop_no_Comp", "hs_Prop_no_Comp", "ba_Prop_no_Comp"), names_to = "Education_Level", values_to = "Percent")
+education_labels <- c("Bachelor's or Higher", "High School and Some College", "Less Than High School")
+data_long_edu_level$Education_Level <- factor(data_long_edu_level$Education_Level, levels = c("ba_Prop_no_Comp", "hs_Prop_no_Comp", "lths_Prop_no_Comp"), labels = education_labels)
+
+data_long_edu_level <- data_long_edu_level %>% arrange(Education_Level)
 
 # Plot 
 c_c <- ggplot(data_long_edu_level, aes(x = Region, y = Percent, fill = Education_Level)) + 
@@ -129,7 +134,7 @@ c_c <- ggplot(data_long_edu_level, aes(x = Region, y = Percent, fill = Education
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-Column {data-width=500}
+#Column {data-width=500}
 -----------------------------------------------------------------------
 
 ### Chart A
@@ -138,7 +143,7 @@ Column {data-width=500}
 ggplotly(Econ)
 ```
 
-Column {data-width=350}
+Column {data-width=550}
 -----------------------------------------------------------------------
 
 ### Chart B
