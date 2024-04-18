@@ -98,7 +98,7 @@ edu_level_data_long$Variable <- factor(edu_level_data_long$Variable,
 Econ <- ggplot(summary_data, aes(x = Region, y = mean_no_Comp)) +
   geom_bar(stat = "identity", fill = "skyblue") +
   labs(x = "Bureau of Economic Analysis Regions", y = "Proportion") +
-  ggtitle("USA: No Computer or Internet Access") + 
+  ggtitle("USA: No Computer or Internet Access in 2022") + 
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
