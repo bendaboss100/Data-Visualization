@@ -19,6 +19,9 @@ library(readr)
 library(tidyverse)
 library(kableExtra)
 library(plotly)
+library(maps)
+library(leaflet)
+library(sf)
 ```
 
 ```{r}
@@ -121,17 +124,22 @@ box_Edu_Level <- ggplot(edu_level_data_long, aes(x = Variable, y = Proportion, f
 
 # Prepare data, pivot long
 data_long_edu_level <- pivot_longer(data, cols = c("lths_Prop_no_Comp", "hs_Prop_no_Comp", "ba_Prop_no_Comp"), names_to = "Education_Level", values_to = "Percent")
+
 education_labels <- c("Bachelor's or Higher", "High School and Some College", "Less Than High School")
+
 data_long_edu_level$Education_Level <- factor(data_long_edu_level$Education_Level, levels = c("ba_Prop_no_Comp", "hs_Prop_no_Comp", "lths_Prop_no_Comp"), labels = education_labels)
 
-data_long_edu_level <- data_long_edu_level %>% arrange(Education_Level)
+data_long_edu_level <- data_long_edu_level %>% arrange(Region)
 
 # Plot 
-c_c <- ggplot(data_long_edu_level, aes(x = Region, y = Percent, fill = Education_Level)) + 
+c_c <- ggplot(data_long_edu_level, aes(x = reorder(Region, Prop_no_Comp), y = Percent, fill = Education_Level)) + 
   geom_bar(position = "fill", stat = "identity") +
   labs(title = "No Computer or Internet by Economic Region and Education Level", x = "", y = "Percent")+
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+#chart D map
+
 ```
 
 #Column {data-width=500}
@@ -161,15 +169,19 @@ Column {data-width=350}
 
 ```{r}
 ggplotly(c_c)
+
 ```
 
 ### Chart D
 
 ```{r}
-Summary_Edu_level <- summary(edu_level_data) %>%
-  kable("html") %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
-Summary_Edu_level
+geojson <- "C:/Users/shres/Documents/GitHub/Data-Visualization/Data/cb_2018_us_state_500k.json"
+map<- st_read(geojson)
+stateMap=sf::read_sf(geojson, layer='cb_2018_us_state_500k')
+
+base_map= ggplot(data = stateMap)
+
+base_map + geom_sf()
 
 ```
 
