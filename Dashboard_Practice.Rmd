@@ -5,11 +5,6 @@ output:
     orientation: columns
     vertical_layout: fill
 ---
-```{r}
-# install.packages("flexdashboard")
-# install.packages("plotly")
-# Hello
-```
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
@@ -101,11 +96,12 @@ edu_level_data_long$Variable <- factor(edu_level_data_long$Variable,
 #ascending order
 summary_data <- summary_data %>% arrange(mean_no_Comp)
 Econ <- ggplot(summary_data, aes(x = reorder(Region, mean_no_Comp), y = mean_no_Comp)) +
-  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_bar(stat = "identity", fill = "darkblue") +
   labs(x = "Bureau of Economic Analysis Regions", y = "Proportion") +
   ggtitle("USA: No Computer or Internet Access in 2022") + 
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+Econ
 
 # 2 Numerical Plot
 box_Edu_Level <- ggplot(edu_level_data_long, aes(x = Variable, y = Proportion, fill = Variable)) +
@@ -114,10 +110,11 @@ box_Edu_Level <- ggplot(edu_level_data_long, aes(x = Variable, y = Proportion, f
        x = '',
        y = 'Proportion',
        fill = 'Education Level') +
-  scale_fill_manual(values = c("skyblue", "navy", "white", "red")) +
+  scale_fill_manual(values = c( "skyblue", "navy", "white", "red")) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   guides(fill = FALSE) # Remove legend
+box_Edu_Level
 
 # 3 For Bivariate Cat-Cat Plot 
 #Education Level and No Computer in Internet Subscription
@@ -137,8 +134,28 @@ c_c <- ggplot(data_long_edu_level, aes(x = reorder(Region, Prop_no_Comp), y = Pe
   labs(title = "No Computer or Internet by Economic Region and Education Level", x = "", y = "Percent")+
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
+c_c
 #chart D map
+rm(list = ls())
+##
+usaMap=read_sf("C:/Users/shres/Documents/GitHub/Data-Visualization/Data/gz_2010_us_040_00_500k.json")
+
+ggplot(data = usaMap)+ geom_sf() +coord_sf(crs = st_crs(2163)) 
+variables=read.csv("Data/data_for_map.csv")
+head(variables)
+head(usaMap)
+sort(usaMap$NAME)==sort(variables$State)
+usaMap=merge(usaMap,variables, by.x='NAME', by.y='State')
+usaMap
+
+usaMap %>%
+  group_by(Region) %>%
+  summarise_at(vars(Prop_no_Comp), list(Prop_no_Comp_mean=mean)) ->variablesByRegion
+
+#newMap
+variablesByRegion
+ggplot(variablesByRegion) + geom_sf(aes(fill=Prop_no_Comp_mean)) +coord_sf(crs = st_crs(2163)) 
+
 
 ```
 
@@ -148,7 +165,7 @@ c_c <- ggplot(data_long_edu_level, aes(x = reorder(Region, Prop_no_Comp), y = Pe
 ### Chart A
 
 ```{r}
-ggplotly(Econ)
+ggplotly (Econ)
 ```
 
 <<<<<<< HEAD
@@ -168,21 +185,13 @@ Column {data-width=350}
 ### Chart C
 
 ```{r}
-ggplotly(c_c)
+ggplotly (c_c)
 
 ```
 
 ### Chart D
 
 ```{r}
-geojson <- "C:/Users/shres/Documents/GitHub/Data-Visualization/Data/cb_2018_us_state_500k.json"
-map<- st_read(geojson)
-stateMap=sf::read_sf(geojson, layer='cb_2018_us_state_500k')
-
-base_map= ggplot(data = stateMap)
-
-base_map + geom_sf()
-
 ```
 
 
