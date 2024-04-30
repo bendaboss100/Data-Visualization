@@ -102,7 +102,7 @@ data_for_map <- data.frame(State = data$State,
 file_path <- "Data/data_for_map.csv"
 
 # Write the data frame to a CSV file
-write.csv(data_for_map, file_path, append = TRUE, row.names = FALSE, col.names = FALSE)
+write.csv(data_for_map, file_path, append = TRUE, row.names = FALSE)
 
 ```
 
@@ -203,8 +203,9 @@ Map_Econ <- ggplot(variablesByRegion) +
   scale_fill_gradient(name = "Percent", low = "skyblue", high = "darkblue")
 ```
 
-Column {data-width=350}
------------------------------------------------------------------------
+## Sidebar {.sidebar}
+
+## Column {.tabset .tabset-fade data-width=350}
 
 ### Chart A
 
@@ -218,9 +219,6 @@ Econ
 ```{r}
 c_c 
 ```
-
-Column {data-width=350}
------------------------------------------------------------------------
 
 ### Chart C
 
