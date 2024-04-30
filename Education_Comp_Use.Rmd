@@ -326,7 +326,50 @@ base_map= ggplot(data = stateMap)
 
 base_map + geom_sf()
 
+```   
+
+``` {r}
+
+state_area2 <- data.frame(State = state.name, Area = state.area)
+
+
+variables2 <- data[, c("State", "Region", "State Total", "Prop_no_Comp" )]
+
+extra_rows <- data.frame(
+  State = c('District of Columbia', 'Puerto Rico'),
+  Area = c(68.35, 5325)
+)
+
+state_area2 <- rbind(state_area2, extra_rows)
+
+variables2 <- merge(variables2, state_area2, by = "State", all.x = TRUE)
+
+variables2 <- variables2 %>% 
+  mutate(State_Population_Density = `State Total` / state_area)
+
+variables2 <- variables2 %>% 
+  mutate(percent_no_comp_pop_density = Prop_no_Comp / State_Population_Density)
+
+variables2 <- variables2 %>% mutate(log_percent_no_comp_pop_density = log(percent_no_comp_pop_density))
+
 ```
+
+```{r}
+
+popdensity <- ggplot(variables2, aes(x = log(State_Population_Density), y = Prop_no_Comp)) +
+  geom_histogram(stat = "identity", binwidth=100, color="blue", fill="skyblue") +  
+  labs(x = "Log of Population Density", y = "Proportion of People without Computers") +
+  ggtitle("USA: Proportion of people without computers by Population Density") + 
+  theme_minimal() +
+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+
+popdensity
+```
+
 
 
 
