@@ -165,7 +165,7 @@ ggplot(variablesByRegion) + geom_sf(aes(fill=Prop_no_Comp_mean)) +coord_sf(crs =
 ### Chart A
 
 ```{r}
-ggplotly (Econ)
+ggplotly(Econ)
 ```
 
 <<<<<<< HEAD
@@ -185,7 +185,7 @@ Column {data-width=350}
 ### Chart C
 
 ```{r}
-ggplotly (c_c)
+ggplotly(c_c)
 
 ```
 
