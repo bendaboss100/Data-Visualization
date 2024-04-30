@@ -76,14 +76,14 @@ data_enum <- pivot_longer(data, cols = contains("Comp", ignore.case = FALSE), na
 
 data_enum2 <- data %>%
                 group_by(Region) %>%
-                summarize(mean_lhs_dial = mean(`< HS w/Comp w/Dial`),
-                          mean_lhs_noIS = mean(`< HS w/Comp w/out IS`),
-                          mean_hs_dial = mean(`HS some Col w/Comp w/Dial`),
-                          mean_hs_noIS = mean(`HS some Col w/Comp w/out IS`),
-                          mean_col_dial = mean(`BA+  w/Comp w/Dial`),
-                          mean_col_noIS = mean(`BA+  w/Comp w/out IS`))
+                summarize(`Less than high school with dialup` = mean(`< HS w/Comp w/Dial`),
+                          `Less than high school no Internet` = mean(`< HS w/Comp w/out IS`),
+                          `High school with dialup` = mean(`HS some Col w/Comp w/Dial`),
+                          `High school with no internet` = mean(`HS some Col w/Comp w/out IS`),
+                          `College or more with dialup` = mean(`BA+  w/Comp w/Dial`),
+                          `College or more with no internet` = mean(`BA+  w/Comp w/out IS`))
 
-data_enum2 <- data_enum2 %>% pivot_longer(cols = contains("mean", ignore.case = FALSE), names_to = "Tech_Access_Group", values_to = "Count")
+data_enum2 <- data_enum2 %>% pivot_longer(cols = contains("with", ignore.case = FALSE), names_to = "Tech_Access_Group", values_to = "Count")
 ```
 
 
@@ -261,7 +261,7 @@ data <- data %>%
     Prop_HS_No_Comp_Intrnt = ((`HS some Col w/Comp w/out IS` + `HS no Comp` + `HS some Col w/Comp w/Dial`)/`HS some Col Total`),
     Prop_BA_No_Comp_Intrnt = ((`BA+  w/Comp w/out IS` + `BA+  no Comp` + `BA+  w/Comp w/Dial`)/`BA+ Total`))
 
-ggplot(summary_data, aes(x = region, y = Prop_LHS_No_Comp_Intrnt)) +
+ggplot(data, aes(x = Region, y = Prop_LHS_No_Comp_Intrnt)) +
   geom_bar(stat = "identity", fill = "red", color = "black") +
   labs(title = "% of people lower than HS w/o Computers or Internet Access in each state in the US", x = "State", y = "% of people w/ < HS educ and w/o IS") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
