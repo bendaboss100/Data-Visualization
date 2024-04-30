@@ -228,3 +228,43 @@ ggplot(data, aes(x = State, y = Prop_LHS_No_Comp_Intrnt)) +
   labs(title = "% of people lower than HS w/o Computers or Internet Access in each state in the US", x = "State", y = "% of people w/ < HS educ and w/o IS") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
+```{r}
+library(tidyr)
+
+# Currently it includes people with computers and proper internet access but that can be fixed by just removing that column in a copy of the data table
+data_enum <- pivot_longer(data, cols = contains("Comp", ignore.case = FALSE), names_to = "Tech_Access_Group", values_to = "Count")
+
+ggplot(data_enum, aes(x = State, y = Count, fill = Tech_Access_Group)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Breakdown of number of people with different tech access levels in each state",
+       x = "State",
+       y = "Count",
+       fill = "Tech Access Group") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+df <- cbind(data_enum, summary_data)
+ggplot(summary_data, aes(x = region, y = Count, fill = Tech_Access_Group)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Breakdown of number of people with different tech access levels in each state",
+       x = "State",
+       y = "Count",
+       fill = "Tech Access Group") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+head(data_enum)
+head(summary_data)
+```
+
+```{r}
+data_enum2 <- data_enum %>%
+  group_by(Region) %>%
+  summarize(mean = mean(Count, na.rm = TRUE))
+
+ggplot(data_enum2, aes(x = Region, y = mean, fill = Tech_Access_Group)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Dodged Barplot",
+       x = "State",
+       y = "Average number of people in each tech access group",
+       fill = "Tech Access Group") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
