@@ -101,7 +101,7 @@ data_for_map <- data.frame(State = data$State,
 file_path <- "/Data/data_for_map.csv"
 
 # Write the data frame to a CSV file
-write.csv(data_for_map, file_path, append = TRUE, row.names = FALSE)
+#write.csv(data_for_map, file_path, append = TRUE, row.names = FALSE)
 
 ```
 
