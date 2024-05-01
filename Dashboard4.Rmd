@@ -4,6 +4,7 @@ output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
+    
 ---
 
 ```{r setup, include=FALSE}
@@ -206,32 +207,49 @@ Map_Econ <- ggplot(variablesByRegion) +
   scale_fill_gradient(name = "Percent", low = "skyblue", high = "darkblue")
 ```
 
-Column {data-width=350}
------------------------------------------------------------------------
-
+Economic Region
+=====================================  
+    
+Column {data-width=600}
+-------------------------------------
+    
 ### Which regions have the highest percent without computers or internet subscription? 
 
 ```{r}
 Econ
 ```
 
-
+Education Level
+=====================================  
+    
+Column {data-width=600}
+-------------------------------------
+    
 ### Which region is the most polarized for technology accessibility by education level? 
 
 ```{r}
-c_c 
+box_Edu_Level 
 ```
 
-Column {data-width=350}
------------------------------------------------------------------------
-
+Economic Region & Education Level
+=====================================  
+    
+Column {data-width=600}
+-------------------------------------
+    
 ### What level of education has the most accessibility to technology?
 
 ```{r}
-box_Edu_Level
+c_c
 
 ```
 
+Map
+=====================================  
+    
+Column {data-width=600}
+-------------------------------------
+    
 ### Of the lower 48 states, which region has the least accessiblity to technology? 
 
 ```{r}
@@ -239,3 +257,10 @@ Map_Econ
 
 ```
 
+Additional Chart Here
+=====================================  
+    
+Column {data-width=600}
+-------------------------------------
+    
+### 
