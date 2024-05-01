@@ -113,9 +113,10 @@ ascending_data$Region <- factor(ascending_data$Region, levels = ascending_data$R
 # Plot with reordered levels
 Econ <- ggplot(ascending_data, aes(x = Region, y = mean_no_Comp)) +
   geom_bar(stat = "identity", fill = "darkblue") +
-  labs(x = "Bureau of Economic Analysis Regions", y = "") +
-  ggtitle("No Computer or Internet Subscription by Economic Region") +
-  labs(subtitle = "Source: Census.gov/data") + 
+  labs(x = "", y = "") +
+  labs(title = "No Computer or Internet Subscription", x = "", y = "") + 
+  labs(subtitle = "By Economic Region") +
+  labs(caption = "Source: Census.gov/data") + 
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   scale_y_continuous(labels = scales::percent_format(), breaks = seq(0, .18, by = 0.05))
@@ -126,11 +127,12 @@ Econ <- ggplot(ascending_data, aes(x = Region, y = mean_no_Comp)) +
 # 2 Numerical Plot
 box_Edu_Level <- ggplot(edu_level_data_long, aes(x = Variable, y = Proportion, fill = Variable)) +
   geom_boxplot(position = position_dodge(width = 0.75), width = 0.5, alpha = 0.5) +
-  labs(title = 'No Computer or Internet Subscription by Education Level',
+  labs(title = 'No Computer or Internet Subscription',
        x = '',
        y = '',
        fill = 'Education Level') +
-  labs(subtitle = "Source: Census.gov/data") + 
+  labs(subtitle = "By Education Level") +
+  labs(caption = "Source: Census.gov/data") + 
   scale_fill_manual(values = c("#FF0000", "white", "darkblue", "skyblue")) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
@@ -160,8 +162,9 @@ data_long_edu_level$Region <- factor(data_long_edu_level$Region, levels = ascend
 # Graph
 c_c <- ggplot(data_long_edu_level, aes(x = Region, y = Percent, fill = Education_Level)) + 
   geom_bar(position = "fill", stat = "identity") +
-  labs(title = "No Computer or Internet Subscription, Economic Region & Education", x = "", y = "") +
-  labs(subtitle = "Source: Census.gov/data") + 
+  labs(title = "No Computer or Internet Subscription", x = "", y = "") + 
+  labs(subtitle = "By Economic Region & Education Level") +
+  labs(caption = "Source: Census.gov/data") + 
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   scale_y_continuous(labels = scales::percent_format(), breaks = seq(0, 1, by = 0.2)) +
@@ -205,14 +208,14 @@ Map_Econ <- ggplot(variablesByRegion) +
 Column {data-width=350}
 -----------------------------------------------------------------------
 
-### Chart A
+### Which regions have the highest percent without computers or internet subscription? 
 
 ```{r}
 Econ
 ```
 
 
-### Chart B
+### Which region has the highest discrepency of technology accessibility by education level? 
 
 ```{r}
 c_c 
@@ -221,14 +224,14 @@ c_c
 Column {data-width=350}
 -----------------------------------------------------------------------
 
-### Chart C
+### What level of education has the most accessibility to technology?
 
 ```{r}
 box_Edu_Level
 
 ```
 
-### Chart D
+### Of the lower 48 states, which region has the least accessiblity to technology? 
 
 ```{r}
 Map_Econ
