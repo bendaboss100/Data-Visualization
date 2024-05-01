@@ -8,7 +8,6 @@ output:
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
-library(utils)
 library(ggplot2)
 library(dplyr)
 library(readr)
@@ -99,10 +98,10 @@ data_for_map <- data.frame(State = data$State,
                        Prop_no_Comp = data$Prop_no_Comp)
 
 # Specify the file path where you want to save the CSV file
-file_path <- "Data/data_for_map.csv"
+file_path <- "/Data/data_for_map.csv"
 
 # Write the data frame to a CSV file
-write.csv(data_for_map, file_path, append = TRUE, row.names = FALSE, col.names = FALSE)
+write.csv(data_for_map, file_path, append = TRUE, row.names = FALSE)
 
 ```
 
@@ -203,8 +202,9 @@ Map_Econ <- ggplot(variablesByRegion) +
   scale_fill_gradient(name = "Percent", low = "skyblue", high = "darkblue")
 ```
 
-Column {data-width=350}
------------------------------------------------------------------------
+## Sidebar {.sidebar}
+
+## Column {.tabset .tabset-fade data-width=350}
 
 ### Chart A
 
@@ -218,9 +218,6 @@ Econ
 ```{r}
 c_c 
 ```
-
-Column {data-width=350}
------------------------------------------------------------------------
 
 ### Chart C
 

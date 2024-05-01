@@ -73,17 +73,6 @@ library(tidyr)
 
 # Currently it includes people with computers and proper internet access but that can be fixed by just removing that column in a copy of the data table
 data_enum <- pivot_longer(data, cols = contains("Comp", ignore.case = FALSE), names_to = "Tech_Access_Group", values_to = "Count")
-
-data_enum2 <- data %>%
-                group_by(Region) %>%
-                summarize(`Less than high school with dialup` = mean(`< HS w/Comp w/Dial`),
-                          `Less than high school no Internet` = mean(`< HS w/Comp w/out IS`),
-                          `High school with dialup` = mean(`HS some Col w/Comp w/Dial`),
-                          `High school with no internet` = mean(`HS some Col w/Comp w/out IS`),
-                          `College or more with dialup` = mean(`BA+  w/Comp w/Dial`),
-                          `College or more with no internet` = mean(`BA+  w/Comp w/out IS`))
-
-data_enum2 <- data_enum2 %>% pivot_longer(cols = contains("with", ignore.case = FALSE), names_to = "Tech_Access_Group", values_to = "Count")
 ```
 
 
@@ -153,11 +142,28 @@ ggplot(data_enum, aes(x = State, y = Count, fill = Tech_Access_Group)) +
        fill = "Tech Access Group") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
-ggplot(data_enum2, aes(x = Region, y = Count, fill = Tech_Access_Group)) +
+df <- cbind(data_enum, summary_data)
+ggplot(summary_data, aes(x = region, y = Count, fill = Tech_Access_Group)) +
   geom_bar(stat = "identity", position = "dodge") +
   labs(title = "Breakdown of number of people with different tech access levels in each state",
-       x = "Region",
+       x = "State",
        y = "Count",
+       fill = "Tech Access Group") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+head(data_enum)
+head(summary_data)
+```
+
+```{r}
+data_enum2 <- data_enum %>%
+  group_by(Region) %>%
+  summarize(mean = mean(Count, na.rm = TRUE))
+
+ggplot(data_enum2, aes(x = Region, y = mean, fill = Tech_Access_Group)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Dodged Barplot",
+       x = "State",
+       y = "Average number of people in each tech access group",
        fill = "Tech Access Group") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
@@ -261,7 +267,7 @@ data <- data %>%
     Prop_HS_No_Comp_Intrnt = ((`HS some Col w/Comp w/out IS` + `HS no Comp` + `HS some Col w/Comp w/Dial`)/`HS some Col Total`),
     Prop_BA_No_Comp_Intrnt = ((`BA+  w/Comp w/out IS` + `BA+  no Comp` + `BA+  w/Comp w/Dial`)/`BA+ Total`))
 
-ggplot(data, aes(x = Region, y = Prop_LHS_No_Comp_Intrnt)) +
+ggplot(summary_data, aes(x = region, y = Prop_LHS_No_Comp_Intrnt)) +
   geom_bar(stat = "identity", fill = "red", color = "black") +
   labs(title = "% of people lower than HS w/o Computers or Internet Access in each state in the US", x = "State", y = "% of people w/ < HS educ and w/o IS") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
@@ -326,50 +332,7 @@ base_map= ggplot(data = stateMap)
 
 base_map + geom_sf()
 
-```   
-
-``` {r}
-
-state_area2 <- data.frame(State = state.name, Area = state.area)
-
-
-variables2 <- data[, c("State", "Region", "State Total", "Prop_no_Comp" )]
-
-extra_rows <- data.frame(
-  State = c('District of Columbia', 'Puerto Rico'),
-  Area = c(68.35, 5325)
-)
-
-state_area2 <- rbind(state_area2, extra_rows)
-
-variables2 <- merge(variables2, state_area2, by = "State", all.x = TRUE)
-
-variables2 <- variables2 %>% 
-  mutate(State_Population_Density = `State Total` / state_area)
-
-variables2 <- variables2 %>% 
-  mutate(percent_no_comp_pop_density = Prop_no_Comp / State_Population_Density)
-
-variables2 <- variables2 %>% mutate(log_percent_no_comp_pop_density = log(percent_no_comp_pop_density))
-
 ```
-
-```{r}
-
-popdensity <- ggplot(variables2, aes(x = log(State_Population_Density), y = Prop_no_Comp)) +
-  geom_histogram(stat = "identity", binwidth=100, color="blue", fill="skyblue") +  
-  labs(x = "Log of Population Density", y = "Proportion of People without Computers") +
-  ggtitle("USA: Proportion of people without computers by Population Density") + 
-  theme_minimal() +
-
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-```
-
-```{r}
-
-popdensity
-```
-
 
 
 
