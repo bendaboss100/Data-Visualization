@@ -209,7 +209,7 @@ Map_Econ <- ggplot(variablesByRegion) +
   scale_fill_gradient(name = "Percent", low = "skyblue", high = "darkblue")
 ```
 ## Sidebar {.sidebar}
-
+----------------------------------------------------------------------
 ##Column {.tabset .tabset-fade data-width=350}
 -----------------------------------------------------------------------
 
