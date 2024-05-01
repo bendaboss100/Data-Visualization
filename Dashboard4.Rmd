@@ -225,7 +225,7 @@ Education Level
 Column {data-width=600}
 -------------------------------------
     
-### Which region is the most polarized for technology accessibility by education level? 
+### What level of education has the most accessibility to technology?
 
 ```{r}
 box_Edu_Level 
@@ -237,7 +237,7 @@ Economic Region & Education Level
 Column {data-width=600}
 -------------------------------------
     
-### What level of education has the most accessibility to technology?
+### Which region is the most polarized for technology accessibility by education level? 
 
 ```{r}
 c_c
@@ -263,4 +263,4 @@ Additional Chart Here
 Column {data-width=600}
 -------------------------------------
     
-### 
+### Pose a Question here
