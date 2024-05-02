@@ -107,6 +107,33 @@ write.csv(data_for_map, file_path, append = TRUE, row.names = FALSE)
 ```
 
 ```{r}
+library(tidyr)
+
+# Currently it includes people with computers and proper internet access but that can be fixed by just removing that column in a copy of the data table
+data_enum <- pivot_longer(data, cols = contains("Comp", ignore.case = FALSE), names_to = "Tech_Access_Group", values_to = "Count")
+
+data_enum2 <- data %>%
+                group_by(Region) %>%
+                summarize(`Less than high school with dialup` = mean(`< HS w/Comp w/Dial`),
+                          `Less than high school no Internet` = mean(`< HS w/Comp w/out IS`),
+                          `High school with dialup` = mean(`HS some Col w/Comp w/Dial`),
+                          `High school with no internet` = mean(`HS some Col w/Comp w/out IS`),
+                          `College or more with dialup` = mean(`BA+  w/Comp w/Dial`),
+                          `College or more with no internet` = mean(`BA+  w/Comp w/out IS`))
+
+data_enum2 <- data_enum2 %>% pivot_longer(cols = contains("with", ignore.case = FALSE), names_to = "Tech_Access_Group", values_to = "Count")
+
+otherlims <- ggplot(data_enum2, aes(x = Region, y = Count, fill = Tech_Access_Group)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Breakdown of number of people with different tech access levels in each state",
+       x = "Region",
+       y = "Count",
+       fill = "Tech Access Group") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+
+```{r}
 # 1 Categorical Plot Ascending Order
 ascending_data <- summary_data[order(summary_data$mean_no_Comp), ]
 ascending_data$Region <- factor(ascending_data$Region, levels = ascending_data$Region[order(ascending_data$mean_no_Comp)])
@@ -231,6 +258,14 @@ box_Edu_Level
 
 ```{r}
 Map_Econ
+
+```
+
+
+### Chart E
+
+```{r}
+otherlims
 
 ```
 
