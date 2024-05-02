@@ -107,33 +107,6 @@ write.csv(data_for_map, file_path, append = TRUE, row.names = FALSE)
 ```
 
 ```{r}
-library(tidyr)
-
-# Currently it includes people with computers and proper internet access but that can be fixed by just removing that column in a copy of the data table
-data_enum <- pivot_longer(data, cols = contains("Comp", ignore.case = FALSE), names_to = "Tech_Access_Group", values_to = "Count")
-
-data_enum2 <- data %>%
-                group_by(Region) %>%
-                summarize(`Less than high school with dialup` = mean(`< HS w/Comp w/Dial`),
-                          `Less than high school no Internet` = mean(`< HS w/Comp w/out IS`),
-                          `High school with dialup` = mean(`HS some Col w/Comp w/Dial`),
-                          `High school with no internet` = mean(`HS some Col w/Comp w/out IS`),
-                          `College or more with dialup` = mean(`BA+  w/Comp w/Dial`),
-                          `College or more with no internet` = mean(`BA+  w/Comp w/out IS`))
-
-data_enum2 <- data_enum2 %>% pivot_longer(cols = contains("with", ignore.case = FALSE), names_to = "Tech_Access_Group", values_to = "Count")
-
-otherlims <- ggplot(data_enum2, aes(x = Region, y = Count, fill = Tech_Access_Group)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  labs(title = "Breakdown of number of people with different tech access levels in each state",
-       x = "Region",
-       y = "Count",
-       fill = "Tech Access Group") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
-```
-
-
-```{r}
 # 1 Categorical Plot Ascending Order
 ascending_data <- summary_data[order(summary_data$mean_no_Comp), ]
 ascending_data$Region <- factor(ascending_data$Region, levels = ascending_data$Region[order(ascending_data$mean_no_Comp)])
@@ -233,6 +206,31 @@ Map_Econ <- ggplot(variablesByRegion) +
   labs(caption = "Source: Census.gov/data") + 
   scale_fill_gradient(name = "Percent", low = "skyblue", high = "darkblue")
 ```
+
+```{r}
+# 5 Detailed Distributions
+# Currently it includes people with computers and proper internet access but that can be fixed by just removing that column in a copy of the data table
+data_enum <- pivot_longer(data, cols = contains("Comp", ignore.case = FALSE), names_to = "Tech_Access_Group", values_to = "Count")
+
+data_enum2 <- data %>%
+                group_by(Region) %>%
+                summarize(`Less Than High School with Dialup` = mean(`< HS w/Comp w/Dial`),
+                          `Less Than High School with No Internet` = mean(`< HS w/Comp w/out IS`),
+                          `HS with Some College with Dialup` = mean(`HS some Col w/Comp w/Dial`),
+                          `HS with Some College with No internet` = mean(`HS some Col w/Comp w/out IS`),
+                          `BA Plus with Dialup` = mean(`BA+  w/Comp w/Dial`),
+                          `BA Plus with No internet` = mean(`BA+  w/Comp w/out IS`))
+
+data_enum2 <- data_enum2 %>% pivot_longer(cols = contains("with", ignore.case = FALSE), names_to = "Tech_Access_Group", values_to = "Count")
+
+otherlims <- ggplot(data_enum2, aes(x = Region, y = Count, fill = Tech_Access_Group)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Distributions of Tech Accessibility", x = "",
+       y = "Count", fill = "Tech Accessibility by Education Level") +
+  labs(subtitles = "By Economic Region and Education Level") +
+  labs(caption = "Census.gov/data") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
 ## Sidebar {.sidebar}
 ----------------------------------------------------------------------
 ##Column {.tabset .tabset-fade data-width=350}
@@ -268,7 +266,7 @@ Map_Econ
 
 ```
 
-### Chart E
+### Which group stands out for all the economic regions? 
 
 ```{r}
 otherlims

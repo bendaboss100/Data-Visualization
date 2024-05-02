@@ -207,6 +207,33 @@ Map_Econ <- ggplot(variablesByRegion) +
   scale_fill_gradient(name = "Percent", low = "skyblue", high = "darkblue")
 ```
 
+```{r}
+# 5 More Detailed Distribution Plot
+
+# Currently it includes people with computers and proper internet access but that can be fixed by just removing that column in a copy of the data table
+data_enum <- pivot_longer(data, cols = contains("Comp", ignore.case = FALSE), names_to = "Tech_Access_Group", values_to = "Count")
+
+data_enum2 <- data %>%
+                group_by(Region) %>%
+                summarize(`Less Than High School with Dialup` = mean(`< HS w/Comp w/Dial`),
+                          `Less Than High School with No Internet` = mean(`< HS w/Comp w/out IS`),
+                          `HS with Some College with Dialup` = mean(`HS some Col w/Comp w/Dial`),
+                          `HS with Some College with No internet` = mean(`HS some Col w/Comp w/out IS`),
+                          `BA Plus with Dialup` = mean(`BA+  w/Comp w/Dial`),
+                          `BA Plus with No internet` = mean(`BA+  w/Comp w/out IS`))
+
+data_enum2 <- data_enum2 %>% pivot_longer(cols = contains("with", ignore.case = FALSE), names_to = "Tech_Access_Group", values_to = "Count")
+
+otherlims <- ggplot(data_enum2, aes(x = Region, y = Count, fill = Tech_Access_Group)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Distributions of Tech Accessibility", x = "",
+       y = "Count", fill = "Tech Accessibility by Education Level") +
+  labs(subtitles = "By Economic Region and Education Level") +
+  labs(caption = "Census.gov/data") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+
 Economic Region
 =====================================  
     
@@ -257,10 +284,15 @@ Map_Econ
 
 ```
 
-Additional Chart Here
+Distributions of Tech Accessibility
 =====================================  
     
 Column {data-width=600}
 -------------------------------------
     
-### Pose a Question here
+### Which group stands out for all the economic regions? 
+
+```{r}
+otherlims
+```
+
